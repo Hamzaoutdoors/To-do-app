@@ -1,14 +1,19 @@
-/* eslint-disable react/prop-types */
+/* eslint-disable react/forbid-prop-types */
 
 import React from 'react';
 import PropTypes from 'prop-types';
 
 const TodoItem = (props) => {
-  const { todo } = props;
-  const { title } = todo;
+  const { todo, handleChangeProps, deleteTodoProps } = props;
+  const { title, completed, id } = todo;
   return (
     <>
-      <li>{title}</li>
+      <li>
+        <button type="button" onClick={() => deleteTodoProps(id)}>Delete</button>
+        <input type="checkbox" checked={completed} onChange={() => handleChangeProps(id)} />
+        {' '}
+        {title}
+      </li>
     </>
   );
 };
@@ -16,5 +21,7 @@ const TodoItem = (props) => {
 export default TodoItem;
 
 TodoItem.propTypes = {
-  title: PropTypes.string.isRequired,
+  deleteTodoProps: PropTypes.func.isRequired,
+  handleChangeProps: PropTypes.func.isRequired,
+  todo: PropTypes.object.isRequired,
 };

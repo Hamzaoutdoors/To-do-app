@@ -1,6 +1,9 @@
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable no-param-reassign */
 import React, { Component } from 'react';
 import TodosList from './TodosList';
 import Header from './Header';
+import InputTodo from './InputTodo';
 
 class TodoContainer extends Component {
   constructor(props) {
@@ -26,12 +29,41 @@ class TodoContainer extends Component {
     };
   }
 
+  handleChange = (id) => {
+    this.setState((prevState) => ({
+      todos: prevState.todos.map((todo) => {
+        if (todo.id === id) {
+          return {
+            ...todo,
+            completed: !todo.completed,
+          };
+        }
+        return todo;
+      }),
+    }));
+  };
+
+  delTodo = (id) => {
+    this.setState((prev) => ({
+      todos: [...prev.todos.filter((todo) => todo.id !== id)],
+    }));
+  };
+
+  addTodoItem = (title) => {
+    console.log(title);
+  };
+
   render() {
     const { todos } = this.state;
     return (
       <div>
         <Header />
-        <TodosList todos={todos} />
+        <InputTodo addTodoItem={this.addTodoItem} />
+        <TodosList
+          todos={todos}
+          handleChangeProps={this.handleChange}
+          deleteTodoProps={this.delTodo}
+        />
       </div>
     );
   }
