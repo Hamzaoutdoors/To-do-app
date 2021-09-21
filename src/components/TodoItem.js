@@ -1,18 +1,62 @@
+/* eslint-disable prefer-const */
 /* eslint-disable react/forbid-prop-types */
 
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import styles from './TodoItem.module.scss';
 
 const TodoItem = (props) => {
-  const { todo, handleChangeProps, deleteTodoProps } = props;
+  const [editing, setEditing] = useState(false);
+  const {
+    todo, handleChangeProps, deleteTodoProps, setUpdate,
+  } = props;
   const { title, completed, id } = todo;
+
+  const handleEditing = () => {
+    setEditing((current) => !current);
+  };
+
+  const completedStyle = {
+    fontStyle: 'italic',
+    color: '#595959',
+    opacity: 0.4,
+    textDecoration: 'line-through',
+  };
+
+  let viewMode = {};
+  let editMode = {};
+
+  if (editing) {
+    viewMode.display = 'none';
+  } else {
+    editMode.display = 'none';
+  }
+  const handleUpdatedDone = (e) => {
+    if (e.key === 'Enter') {
+      setEditing((current) => !current);
+    }
+  };
+
   return (
     <>
-      <li>
-        <button type="button" onClick={() => deleteTodoProps(id)}>Delete</button>
-        <input type="checkbox" checked={completed} onChange={() => handleChangeProps(id)} />
-        {' '}
-        {title}
+      <li className={styles.item}>
+        <div onDoubleClick={handleEditing} style={viewMode}>
+          <input type="checkbox" className={styles.checkbox} checked={completed} onChange={() => handleChangeProps(id)} />
+          <button type="button" onClick={() => deleteTodoProps(id)}>Delete</button>
+          <span style={completed ? completedStyle : null}>
+            { title }
+          </span>
+        </div>
+        <input
+          type="text"
+          className={styles.textInput}
+          style={editMode}
+          value={title}
+          onChange={(e) => {
+            setUpdate(e.target.value, id);
+          }}
+          onKeyDown={handleUpdatedDone}
+        />
       </li>
     </>
   );
@@ -21,6 +65,7 @@ const TodoItem = (props) => {
 export default TodoItem;
 
 TodoItem.propTypes = {
+  setUpdate: PropTypes.func.isRequired,
   deleteTodoProps: PropTypes.func.isRequired,
   handleChangeProps: PropTypes.func.isRequired,
   todo: PropTypes.object.isRequired,
