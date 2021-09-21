@@ -63,3 +63,7 @@ body {
   outline: none;
   border: none;
 }
+
+.submit-icon {
+  margin-top: 2px;
+}

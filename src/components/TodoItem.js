@@ -1,12 +1,20 @@
+/* eslint-disable no-console */
+/* eslint-disable no-use-before-define */
 /* eslint-disable prefer-const */
 /* eslint-disable react/forbid-prop-types */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { FaTrash } from 'react-icons/fa';
 import styles from './TodoItem.module.scss';
 
 const TodoItem = (props) => {
   const [editing, setEditing] = useState(false);
+
+  useEffect(() => () => {
+    console.log('Cleaning up...');
+  }, []);
+
   const {
     todo, handleChangeProps, deleteTodoProps, setUpdate,
   } = props;
@@ -31,6 +39,7 @@ const TodoItem = (props) => {
   } else {
     editMode.display = 'none';
   }
+
   const handleUpdatedDone = (e) => {
     if (e.key === 'Enter') {
       setEditing((current) => !current);
@@ -42,7 +51,9 @@ const TodoItem = (props) => {
       <li className={styles.item}>
         <div onDoubleClick={handleEditing} style={viewMode}>
           <input type="checkbox" className={styles.checkbox} checked={completed} onChange={() => handleChangeProps(id)} />
-          <button type="button" onClick={() => deleteTodoProps(id)}>Delete</button>
+          <button type="button" onClick={() => deleteTodoProps(id)}>
+            <FaTrash style={{ color: 'orangered', fontSize: '16px' }} />
+          </button>
           <span style={completed ? completedStyle : null}>
             { title }
           </span>
